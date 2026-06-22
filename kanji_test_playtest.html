@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>漢字テスト</title>
+<style>
+body{font-family:sans-serif;max-width:820px;margin:auto;padding:20px;text-align:center}
+.card{border:1px solid #ddd;border-radius:12px;padding:24px}
+.question{font-size:32px;line-height:1.8}
+.answer{font-size:40px;color:#0a63d8;margin:20px}
+.hidden{display:none}
+button{padding:10px 18px;margin:8px;font-size:18px}
+.result{text-align:left}
+</style>
+</head>
+<body>
+
+<h1>漢字テスト</h1>
+
+<div id="startArea">
+<h2>出題数を選択</h2>
+<button onclick="startRandom(15)">ランダム15問</button>
+<button onclick="startRandom(30)">ランダム30問</button>
+<button onclick="startRandom(original.length)">ランダム全問</button>
+</div>
+
+<div class="card hidden" id="card">
+<div id="question"></div>
+<div id="answer" class="answer hidden"></div>
+<button id="showBtn">答えを見る</button>
+
+<div id="judgeArea" class="hidden">
+<button onclick="judge(true)">○ 正解</button>
+<button onclick="judge(false)">× 不正解</button>
+</div>
+</div>
+
+<div id="result" class="hidden"></div>
+
+<script>
+const original=[
+["しんごうをまもる","□号を守る","信号を守る"],
+["そくたつでおくる","□達で送る","速達で送る"],
+["そとにとびだつ","外に□び立つ","外に飛び立つ"],
+["くるまのうんてんせき","車の運転□","車の運転席"],
+["ふるいたてもの","古い□物","古い建物"],
+["なのはなばたけ","□の花畑","菜の花畑"],
+["もくひょうをたてる","目□を立てる","目標を立てる"],
+["れいをあげる","□をあげる","例をあげる"],
+["ほうほうをしる","方□を知る","方法を知る"],
+["ぶんるいする","分□する","分類する"],
+["ひととあうきかい","人と会う□会","人と会う機会"],
+["きかいでつくる","機□で作る","機械で作る"],
+["ひゃっかじてん","百科事□","百科事典"],
+["しかいしんこう","□会進行","司会進行"],
+["ごじゅうおんじゅん","五十音□","五十音順"],
+["きろくする","記□する","記録する"],
+["こくごじてん","国語□典","国語辞典"],
+["なりたち","□り立ち","成り立ち"],
+["おんくんさくいん","音□さくいん","音訓さくいん"],
+["しるしをつける","□をつける","印をつける"],
+["しずかなもり","□かな森","静かな森"],
+["あいどくしょ","□読書","愛読書"],
+["さくやのきおん","□夜の気温","昨夜の気温"],
+["おおきなおしろ","大きなお□","大きなお城"],
+["しょかのころ","□夏のころ","初夏のころ"],
+["うつくしいふうけい","美しい風□","美しい風景"],
+["とりのむれ","鳥の＿＿","鳥の群れ"],
+["ひつようなしな","□要な品","必要な品"],
+["はなしのようてん","話の□点","話の要点"],
+["もくてきをもつ","目□を持つ","目的を持つ"],
+["とどうふけん","都道□県","都道府県"],
+["さいたまけん","□玉県","埼玉県"],
+["やまがたけんのおんせん","山□県の温泉","山形県の温泉"],
+["にいがたのおこめ","新□のお米","新潟のお米"],
+["とちぎのめいぶつ","□木の名物","栃木の名物"],
+["ふくいけんへいく","福□県へ行く","福井県へ行く"],
+["やまなしのぶどう","山□のぶどう","山梨のぶどう"],
+["たくさんのりょう","沢山の□","沢山の量"],
+["にっぽんのじんこう","日本の人□","日本の人口"],
+["おかやまのもも","□山のもも","岡山のもも"],
+["ただしくつたえる","正しく＿＿","正しく伝える"],
+["みちあんない","道□内","道案内"],
+["くわしいせつめい","くわしい□明","くわしい説明"],
+["たいせつなしあい","大切な□合","大切な試合"],
+["リレーのせんしゅ","リレーの□手","リレーの選手"],
+["おおくのかんきゃく","多くの□客","多くの観客"],
+["はたをふる","□をふる","旗をふる"],
+["しょうりする","勝□する","勝利する"],
+["しゅざいする","取□する","取材する"]
+];
+
+let questions=[], mistakes=[], current=0, correct=0, selected=0;
+const q=question,a=answer,r=result;
+
+function shuffle(x){return [...x].sort(()=>Math.random()-0.5)}
+function pickRandom(c){return shuffle(original).slice(0,Math.min(c,original.length))}
+
+function startRandom(count){
+selected=count;
+questions=pickRandom(count);
+mistakes=[]; current=0; correct=0;
+startArea.classList.add("hidden");
+card.classList.remove("hidden");
+r.classList.add("hidden");
+show();
+}
+
+function show(){
+if(current>=questions.length) return finish();
+let item=questions[current];
+q.innerHTML=`<div class="question">${current+1}/${questions.length}<br><br>${item[0]}<br><br>${item[1]}</div>`;
+a.textContent="答え："+item[2];
+a.classList.add("hidden");
+judgeArea.classList.add("hidden");
+}
+
+showBtn.onclick=()=>{
+a.classList.remove("hidden");
+judgeArea.classList.remove("hidden");
+}
+
+function judge(ok){
+if(ok) correct++;
+else mistakes.push(questions[current]);
+current++;
+show();
+}
+
+function finish(){
+card.classList.add("hidden");
+let html=`<h2>終了</h2><p>${questions.length}問中 ${correct}問正解</p>`;
+if(mistakes.length){
+html+="<h3>間違えた問題</h3>";
+mistakes.forEach(m=>html+=`<div>${m[1]} → ${m[2]}</div>`);
+html+=`<br><button onclick="retry()">間違えた問題だけ再出題</button>`;
+}
+html+=`<br><button onclick="startRandom(selected)">同じ条件でもう一回</button>
+<button onclick="menu()">メニューへ</button>`;
+r.innerHTML=html;
+r.classList.remove("hidden");
+}
+function retry(){
+questions=shuffle(mistakes);
+mistakes=[]; current=0; correct=0;
+card.classList.remove("hidden");
+r.classList.add("hidden");
+show();
+}
+function menu(){
+r.classList.add("hidden");
+startArea.classList.remove("hidden");
+}
+</script>
+</body>
+</html>
