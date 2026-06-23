@@ -284,19 +284,38 @@ let result="";
 
 let ai=0;
 
-for(let i=0;i<question.length;i++){
+let i=0;
+
+while(i<question.length){
 
 if(question[i]==="□"||question[i]==="＿"){
 
-result+=`<span class="red">${answerText[ai]}</span>`;
+let start=i;
+
+while(
+i<question.length &&
+(question[i]==="□"||question[i]==="＿")
+){
+i++;
+}
+
+let hideCount=i-start;
+
+result+=`<span class="red">${
+answerText.substring(ai,ai+hideCount)
+}</span>`;
+
+ai+=hideCount;
 
 }else{
 
 result+=answerText[ai];
 
-}
-
 ai++;
+
+i++;
+
+}
 
 }
 
