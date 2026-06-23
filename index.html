@@ -276,18 +276,31 @@ function showAnswer(){
 
 let q=questions[index];
 
-let hidden=
-q[1]
-.replace(/[^□＿]/g,"")
-.length;
+let question=q[1];
 
-answer.innerHTML=
-q[2].replace(
-q[2].substring(0,hidden),
-`<span class="red">${
-q[2].substring(0,hidden)
-}</span>`
-);
+let answerText=q[2];
+
+let result="";
+
+let ai=0;
+
+for(let i=0;i<question.length;i++){
+
+if(question[i]==="□"||question[i]==="＿"){
+
+result+=`<span class="red">${answerText[ai]}</span>`;
+
+}else{
+
+result+=answerText[ai];
+
+}
+
+ai++;
+
+}
+
+answer.innerHTML=result;
 
 answer.classList.remove("hidden");
 
